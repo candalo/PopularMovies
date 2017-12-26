@@ -24,6 +24,7 @@ public class MoviePresenter implements Presenter<MovieView> {
     @Override
     public void attachTo(MovieView view) {
         this.view = view;
+        init();
     }
 
     @Override
@@ -32,7 +33,7 @@ public class MoviePresenter implements Presenter<MovieView> {
         view = null;
     }
 
-    public void onCallApiButtonClicked() {
+    private void init() {
         getMovieListByPopularityUseCase.execute(new GetMovieListByPopularityObserver(), null);
         view.showLoading();
     }
