@@ -1,4 +1,4 @@
-package br.com.candalo.popularmovies.base.di;
+package br.com.candalo.popularmovies.base.data.di;
 
 import javax.inject.Singleton;
 

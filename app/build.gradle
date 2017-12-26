@@ -1,4 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.jakewharton.hugo'
+
+Properties projectProperties = new Properties()
+projectProperties.load(new FileInputStream(new File(projectDir, '/secrets.properties')))
+def API_KEY = "ApiKey"
 
 android {
     compileSdkVersion 26
@@ -11,21 +16,32 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField("String", API_KEY, "\"" + projectProperties.getProperty(API_KEY) + "\"")
+        }
         release {
+            buildConfigField("String", API_KEY, "\"" + projectProperties.getProperty(API_KEY) + "\"")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
-ext{
+ext {
     supportLibraryVersion = '26.1.0'
+    constraintLayoutVersion = '1.0.2'
     junitVersion = '4.12'
     testRunnerVersion = '1.0.1'
     espressoVersion = '3.0.1'
     retrofitVersion = '2.3.0'
     daggerVersion = '2.14.1'
+    butterknifeVersion = '8.8.1'
     rxjavaVersion = '2.1.7'
+    rxAndroidVersion = '2.0.1'
 }
 
 dependencies {
@@ -33,6 +49,7 @@ dependencies {
 
     // support library
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 
     // test
     testImplementation "junit:junit:$junitVersion"
@@ -47,7 +64,10 @@ dependencies {
     // dependency injection
     implementation "com.google.dagger:dagger:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    implementation "com.jakewharton:butterknife:$butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
 
     // reactive extensions
     implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
 }
