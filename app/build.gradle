@@ -18,10 +18,36 @@ android {
     }
 }
 
+ext{
+    supportLibraryVersion = '26.1.0'
+    junitVersion = '4.12'
+    testRunnerVersion = '1.0.1'
+    espressoVersion = '3.0.1'
+    retrofitVersion = '2.3.0'
+    daggerVersion = '2.14.1'
+    rxjavaVersion = '2.1.7'
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    // support library
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+
+    // test
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+
+    // network
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+
+    // dependency injection
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // reactive extensions
+    implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
 }
