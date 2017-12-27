@@ -11,19 +11,19 @@ import br.com.candalo.popularmovies.features.movies.domain.models.Movie;
 import br.com.candalo.popularmovies.features.movies.domain.models.MovieResponseData;
 import io.reactivex.Observable;
 
-public class MovieQuerySpecImpl implements MovieQuerySpec {
+public class MoviesByPopularityQuerySpec implements MovieQuerySpec {
 
     private MovieApi movieApi;
 
     @Inject
-    public MovieQuerySpecImpl(MovieApi movieApi) {
+    public MoviesByPopularityQuerySpec(MovieApi movieApi) {
         this.movieApi = movieApi;
     }
 
     @Override
     public Observable<List<Movie>> query() {
         return movieApi
-                .getTopRatedMovies(BuildConfig.ApiKey)
+                .getMostPopularMovies(BuildConfig.ApiKey)
                 .map(MovieResponseData::getMovies);
     }
 

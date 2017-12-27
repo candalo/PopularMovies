@@ -2,6 +2,8 @@
     <string name="app_name">PopularMovies</string>
 
     <!-- Movie list -->
+    <string name="movie_list_menu_popularity_item">Ordenar por popularidade</string>
+    <string name="movie_list_menu_rating_item">Ordenar por avaliação</string>
     <string name="movie_list_toolbar_title">Movies</string>
 
     <!-- Movie details -->

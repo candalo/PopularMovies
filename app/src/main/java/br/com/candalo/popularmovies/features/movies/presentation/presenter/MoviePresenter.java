@@ -15,16 +15,19 @@ public class MoviePresenter implements Presenter<MovieView> {
 
     private MovieView view;
     private UseCase<List<Movie>, Void> getMovieListByPopularityUseCase;
+    private UseCase<List<Movie>, Void> getMovieListByRatingUseCase;
 
     @Inject
-    public MoviePresenter(UseCase<List<Movie>, Void> getMovieListByPopularityUseCase) {
+    public MoviePresenter(UseCase<List<Movie>, Void> getMovieListByPopularityUseCase,
+                          UseCase<List<Movie>, Void> getMovieListByRatingUseCase) {
         this.getMovieListByPopularityUseCase = getMovieListByPopularityUseCase;
+        this.getMovieListByRatingUseCase = getMovieListByRatingUseCase;
     }
 
     @Override
     public void attachTo(MovieView view) {
         this.view = view;
-        init();
+        getMoviesByPopularity();
     }
 
     @Override
@@ -33,12 +36,43 @@ public class MoviePresenter implements Presenter<MovieView> {
         view = null;
     }
 
-    private void init() {
+    public void onGetMoviesByPopularityOptionSelected() {
+        getMoviesByPopularity();
+    }
+
+    public void onGetMoviesByRatingOptionSelected() {
+        getMoviesByRating();
+    }
+
+    private void getMoviesByPopularity() {
         getMovieListByPopularityUseCase.execute(new GetMovieListByPopularityObserver(), null);
         view.showLoading();
     }
 
+    private void getMoviesByRating() {
+        getMovieListByRatingUseCase.execute(new GetMovieListByRatingObserver(), null);
+        view.showLoading();
+    }
+
     class GetMovieListByPopularityObserver extends DisposableObserver<List<Movie>> {
+        @Override
+        public void onNext(List<Movie> movies) {
+            view.onMoviesLoaded(movies);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            view.hideLoading();
+            view.showErrorMessage("Ops! An error occurred");
+        }
+
+        @Override
+        public void onComplete() {
+            view.hideLoading();
+        }
+    }
+
+    class GetMovieListByRatingObserver extends DisposableObserver<List<Movie>> {
         @Override
         public void onNext(List<Movie> movies) {
             view.onMoviesLoaded(movies);
