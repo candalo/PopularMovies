@@ -2,6 +2,7 @@ package br.com.candalo.popularmovies.features.movies.presentation.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -13,7 +14,6 @@ import javax.inject.Inject;
 
 import br.com.candalo.popularmovies.App;
 import br.com.candalo.popularmovies.R;
-import br.com.candalo.popularmovies.base.presentation.GridAutoFitLayoutManager;
 import br.com.candalo.popularmovies.features.movies.data.di.DaggerMovieComponent;
 import br.com.candalo.popularmovies.features.movies.domain.models.Movie;
 import br.com.candalo.popularmovies.features.movies.presentation.presenter.MoviePresenter;
@@ -50,7 +50,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     }
 
     private void setupRecyclerView() {
-        GridAutoFitLayoutManager layoutManager = new GridAutoFitLayoutManager(this, 500);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         moviesRecyclerView.setLayoutManager(layoutManager);
     }
 
