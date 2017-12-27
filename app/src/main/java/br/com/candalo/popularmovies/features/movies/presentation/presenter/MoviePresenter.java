@@ -63,7 +63,7 @@ public class MoviePresenter implements Presenter<MovieView> {
         @Override
         public void onError(Throwable e) {
             view.hideLoading();
-            view.showErrorMessage("Ops! An error occurred");
+            //TODO: Show error message
         }
 
         @Override
@@ -81,7 +81,7 @@ public class MoviePresenter implements Presenter<MovieView> {
         @Override
         public void onError(Throwable e) {
             view.hideLoading();
-            view.showErrorMessage("Ops! An error occurred");
+            //TODO: Show error message
         }
 
         @Override
