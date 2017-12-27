@@ -3,6 +3,10 @@ package br.com.candalo.popularmovies.features.movies.domain.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
+
+@Parcel(Parcel.Serialization.BEAN)
 public class Movie {
 
     private String title;
@@ -13,15 +17,16 @@ public class Movie {
     @SerializedName("overview")
     private String synopsis;
     @SerializedName("vote_average")
-    private String userAverage;
+    private double userAverage;
     @SerializedName("release_date")
     private String releaseDate;
 
+    @ParcelConstructor
     public Movie(String title,
                  String posterThumbnail,
                  String backdropThumbnail,
                  String synopsis,
-                 String userAverage,
+                 double userAverage,
                  String releaseDate) {
         this.title = title;
         this.posterThumbnail = posterThumbnail;
@@ -47,7 +52,7 @@ public class Movie {
         return synopsis;
     }
 
-    public String getUserAverage() {
+    public double getUserAverage() {
         return userAverage;
     }
 

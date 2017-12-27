@@ -10,4 +10,5 @@ public interface MovieView extends LoadDataView {
 
     void onMoviesLoaded(List<Movie> movies);
 
+    void onMovieSelected(Movie movie);
 }

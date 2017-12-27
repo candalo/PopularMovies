@@ -1,12 +1,16 @@
 package br.com.candalo.popularmovies.features.movies.presentation.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -35,6 +39,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
         injectDependencies();
+        setupToolbar();
         setupRecyclerView();
         presenter.attachTo(this);
     }
@@ -49,6 +54,13 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
                 .inject(this);
     }
 
+    private void setupToolbar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.movie_list_toolbar_title);
+        }
+    }
+
     private void setupRecyclerView() {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         moviesRecyclerView.setLayoutManager(layoutManager);
@@ -57,8 +69,15 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     @Override
     @DebugLog
     public void onMoviesLoaded(List<Movie> movies) {
-        MovieAdapter movieAdapter = new MovieAdapter(movies);
+        MovieAdapter movieAdapter = new MovieAdapter(movies, this);
         moviesRecyclerView.setAdapter(movieAdapter);
+    }
+
+    @Override
+    public void onMovieSelected(Movie movie) {
+        Intent intent = new Intent(this, MovieDetailsActivity.class);
+        intent.putExtra(Movie.class.getName(), Parcels.wrap(movie));
+        startActivity(intent);
     }
 
     @Override
