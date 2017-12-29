@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import br.com.candalo.popularmovies.base.domain.UseCase;
+import br.com.candalo.popularmovies.base.presentation.ErrorHandler;
 import br.com.candalo.popularmovies.base.presentation.Presenter;
 import br.com.candalo.popularmovies.features.movies.domain.models.Movie;
 import br.com.candalo.popularmovies.features.movies.presentation.view.MovieView;
@@ -16,12 +17,15 @@ public class MoviePresenter implements Presenter<MovieView> {
     private MovieView view;
     private UseCase<List<Movie>, Void> getMovieListByPopularityUseCase;
     private UseCase<List<Movie>, Void> getMovieListByRatingUseCase;
+    private ErrorHandler errorHandler;
 
     @Inject
     public MoviePresenter(UseCase<List<Movie>, Void> getMovieListByPopularityUseCase,
-                          UseCase<List<Movie>, Void> getMovieListByRatingUseCase) {
+                          UseCase<List<Movie>, Void> getMovieListByRatingUseCase,
+                          ErrorHandler errorHandler) {
         this.getMovieListByPopularityUseCase = getMovieListByPopularityUseCase;
         this.getMovieListByRatingUseCase = getMovieListByRatingUseCase;
+        this.errorHandler = errorHandler;
     }
 
     @Override
@@ -33,6 +37,7 @@ public class MoviePresenter implements Presenter<MovieView> {
     @Override
     public void destroy() {
         getMovieListByPopularityUseCase.dispose();
+        getMovieListByRatingUseCase.dispose();
         view = null;
     }
 
@@ -63,7 +68,7 @@ public class MoviePresenter implements Presenter<MovieView> {
         @Override
         public void onError(Throwable e) {
             view.hideLoading();
-            //TODO: Show error message
+            view.showErrorMessage(errorHandler.handleError(e));
         }
 
         @Override
@@ -81,7 +86,7 @@ public class MoviePresenter implements Presenter<MovieView> {
         @Override
         public void onError(Throwable e) {
             view.hideLoading();
-            //TODO: Show error message
+            view.showErrorMessage(errorHandler.handleError(e));
         }
 
         @Override
