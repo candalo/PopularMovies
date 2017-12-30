@@ -10,6 +10,7 @@ import br.com.candalo.popularmovies.base.presentation.ErrorHandler;
 import br.com.candalo.popularmovies.base.presentation.Presenter;
 import br.com.candalo.popularmovies.features.movies.domain.models.Movie;
 import br.com.candalo.popularmovies.features.movies.presentation.view.MovieView;
+import br.com.candalo.popularmovies.network.NetworkException;
 import io.reactivex.observers.DisposableObserver;
 
 public class MoviePresenter implements Presenter<MovieView> {
@@ -69,6 +70,9 @@ public class MoviePresenter implements Presenter<MovieView> {
         public void onError(Throwable e) {
             view.hideLoading();
             view.showErrorMessage(errorHandler.handleError(e));
+            if (e instanceof NetworkException) {
+                view.showNetworkErrorMessage();
+            }
         }
 
         @Override
@@ -87,6 +91,9 @@ public class MoviePresenter implements Presenter<MovieView> {
         public void onError(Throwable e) {
             view.hideLoading();
             view.showErrorMessage(errorHandler.handleError(e));
+            if (e instanceof NetworkException) {
+                view.showNetworkErrorMessage();
+            }
         }
 
         @Override

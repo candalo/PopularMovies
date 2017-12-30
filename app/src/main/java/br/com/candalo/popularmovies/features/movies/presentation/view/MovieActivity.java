@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.parceler.Parcels;
@@ -36,6 +37,8 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     ProgressBar loadingMoviesProgressBar;
     @BindView(R.id.rv_movies)
     RecyclerView moviesRecyclerView;
+    @BindView(R.id.tv_internet_error)
+    TextView internetErrorTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +118,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
 
     @Override
     public void showLoading() {
+        internetErrorTextView.setVisibility(View.INVISIBLE);
         loadingMoviesProgressBar.setVisibility(View.VISIBLE);
     }
 
@@ -126,5 +130,10 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     @Override
     public void showErrorMessage(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showNetworkErrorMessage() {
+        internetErrorTextView.setVisibility(View.VISIBLE);
     }
 }
