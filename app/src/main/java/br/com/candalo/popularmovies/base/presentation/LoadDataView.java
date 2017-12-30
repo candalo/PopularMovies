@@ -9,4 +9,5 @@ public interface LoadDataView {
 
     void showErrorMessage(String errorMessage);
 
+    void showNetworkErrorMessage();
 }
