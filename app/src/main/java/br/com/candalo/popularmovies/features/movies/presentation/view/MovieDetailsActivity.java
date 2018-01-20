@@ -11,14 +11,23 @@ import android.widget.TextView;
 
 import org.parceler.Parcels;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
+import br.com.candalo.popularmovies.App;
 import br.com.candalo.popularmovies.R;
+import br.com.candalo.popularmovies.features.movies.data.di.DaggerMovieComponent;
 import br.com.candalo.popularmovies.features.movies.domain.models.Movie;
+import br.com.candalo.popularmovies.features.movies.presentation.presenter.MovieDetailsPresenter;
 import br.com.candalo.popularmovies.features.movies.util.MovieUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MovieDetailsActivity extends AppCompatActivity {
+public class MovieDetailsActivity extends AppCompatActivity implements MovieDetailsView {
 
+    @Inject
+    MovieDetailsPresenter presenter;
     @BindView(R.id.tv_movie_title)
     TextView movieTitleTextView;
     @BindView(R.id.iv_backdrop_thumbnail)
@@ -39,10 +48,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setupToolbar();
         movie = getMovieData();
         setupScreenData();
+
+        presenter.attachTo(this);
     }
 
     private void injectDependencies() {
         ButterKnife.bind(this);
+
+        DaggerMovieComponent
+                .builder()
+                .applicationComponent(((App)getApplication()).getApplicationComponent())
+                .build()
+                .inject(this);
     }
 
     private void setupToolbar() {
@@ -66,6 +83,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        presenter.destroy();
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
@@ -76,5 +99,30 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showErrorMessage(String errorMessage) {
+
+    }
+
+    @Override
+    public void showNetworkErrorMessage() {
+
+    }
+
+    @Override
+    public void onTrailerUrlsLoaded(List<String> urls) {
+
     }
 }
