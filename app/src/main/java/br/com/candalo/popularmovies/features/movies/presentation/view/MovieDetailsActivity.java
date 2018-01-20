@@ -1,10 +1,14 @@
 package br.com.candalo.popularmovies.features.movies.presentation.view;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +23,9 @@ import br.com.candalo.popularmovies.App;
 import br.com.candalo.popularmovies.R;
 import br.com.candalo.popularmovies.features.movies.data.di.DaggerMovieComponent;
 import br.com.candalo.popularmovies.features.movies.domain.models.Movie;
+import br.com.candalo.popularmovies.features.movies.domain.models.Video;
 import br.com.candalo.popularmovies.features.movies.presentation.presenter.MovieDetailsPresenter;
+import br.com.candalo.popularmovies.features.movies.presentation.view.adapter.MovieDetailsAdapter;
 import br.com.candalo.popularmovies.features.movies.util.MovieUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +44,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     TextView userAverageTextView;
     @BindView(R.id.tv_synopsis)
     TextView synopsisTextView;
+    @BindView(R.id.rv_movie_trailers)
+    RecyclerView movieTrailersRecyclerView;
     private Movie movie;
 
     @Override
@@ -46,10 +54,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         setContentView(R.layout.activity_movie_details);
         injectDependencies();
         setupToolbar();
+        setupRecyclerView();
         movie = getMovieData();
         setupScreenData();
-
         presenter.attachTo(this);
+        presenter.getMovieTrailers(movie.getId());
     }
 
     private void injectDependencies() {
@@ -68,6 +77,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.movie_details_toolbar_title);
         }
+    }
+
+    private void setupRecyclerView() {
+        movieTrailersRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        movieTrailersRecyclerView.setLayoutManager(layoutManager);
     }
 
     private Movie getMovieData() {
@@ -122,7 +137,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     }
 
     @Override
-    public void onTrailerUrlsLoaded(List<String> urls) {
+    public void onTrailersLoaded(List<Video> trailers) {
+        MovieDetailsAdapter adapter = new MovieDetailsAdapter(trailers, this);
+        movieTrailersRecyclerView.setAdapter(adapter);
+    }
 
+    @Override
+    public void onTrailerItemClicked(Video trailer) {
+        Uri uri = Uri.parse(getString(R.string.youtube_trailer_url, trailer.getKey()));
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }
