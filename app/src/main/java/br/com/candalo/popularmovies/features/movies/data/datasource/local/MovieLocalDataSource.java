@@ -37,13 +37,17 @@ public class MovieLocalDataSource implements LocalDataSource<Movie> {
         contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
         contentValues.put(MovieContract.MovieEntry.COLUMN_USER_AVERAGE, movie.getUserAverage());
 
-        Uri uri = context.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, contentValues);
+        try {
+            Uri uri = context.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, contentValues);
 
-        if (uri != null) {
-            return Observable.empty();
+            if (uri != null) {
+                return Observable.empty();
+            }
+
+            return Observable.error(new Exception());
+        } catch (Exception e) {
+            return Observable.error(new Exception());
         }
-
-        return Observable.error(new Exception());
     }
 
     @Override

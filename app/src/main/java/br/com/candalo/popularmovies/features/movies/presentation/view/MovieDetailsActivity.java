@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -64,6 +65,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         injectDependencies();
         setupToolbar();
         setupRecyclerViews();
+        setupCheckBox();
         movie = getMovieData();
         setupScreenData();
         setupPresenter();
@@ -92,6 +94,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         movieTrailersRecyclerView.setHasFixedSize(true);
         movieReviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         movieReviewsRecyclerView.setHasFixedSize(true);
+    }
+
+    private void setupCheckBox() {
+        favoriteCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            favoriteCheckBox.setChecked(true);
+        });
     }
 
     private Movie getMovieData() {
