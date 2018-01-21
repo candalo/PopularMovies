@@ -35,7 +35,6 @@ public class MoviePresenter implements Presenter<MovieView> {
     @Override
     public void attachTo(MovieView view) {
         this.view = view;
-        getMoviesByPopularity();
     }
 
     @Override
@@ -58,6 +57,10 @@ public class MoviePresenter implements Presenter<MovieView> {
         getStarredMovies();
     }
 
+    public void showLoadedMovies(List<Movie> movies) {
+        view.onMoviesLoaded(movies);
+    }
+
     private void getMoviesByPopularity() {
         getMovieListByPopularityUseCase.execute(new GetMovieListByPopularityObserver(), null);
         view.showLoading();
@@ -76,6 +79,7 @@ public class MoviePresenter implements Presenter<MovieView> {
     class GetMovieListByPopularityObserver extends DisposableObserver<List<Movie>> {
         @Override
         public void onNext(List<Movie> movies) {
+            view.hideLoading();
             view.onMoviesLoaded(movies);
         }
 
@@ -90,13 +94,13 @@ public class MoviePresenter implements Presenter<MovieView> {
 
         @Override
         public void onComplete() {
-            view.hideLoading();
         }
     }
 
     class GetMovieListByRatingObserver extends DisposableObserver<List<Movie>> {
         @Override
         public void onNext(List<Movie> movies) {
+            view.hideLoading();
             view.onMoviesLoaded(movies);
         }
 
@@ -111,13 +115,13 @@ public class MoviePresenter implements Presenter<MovieView> {
 
         @Override
         public void onComplete() {
-            view.hideLoading();
         }
     }
 
     class GetStarredMoviesObserver extends DisposableObserver<List<Movie>> {
         @Override
         public void onNext(List<Movie> movies) {
+            view.hideLoading();
             view.onMoviesLoaded(movies);
         }
 
