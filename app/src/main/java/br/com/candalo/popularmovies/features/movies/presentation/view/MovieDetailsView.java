@@ -16,4 +16,8 @@ public interface MovieDetailsView extends LoadDataView {
     void onReviewsLoaded(List<MovieReview> reviews);
 
     void onReviewItemClicked(MovieReview review);
+
+    void showStarred();
+
+    void showUnstarred();
 }

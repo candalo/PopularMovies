@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Named;
 
 import br.com.candalo.popularmovies.base.data.CloudDataSource;
+import br.com.candalo.popularmovies.base.data.LocalDataSource;
 import br.com.candalo.popularmovies.base.data.di.ActivityScope;
 import br.com.candalo.popularmovies.base.domain.UseCase;
 import br.com.candalo.popularmovies.base.presentation.ErrorHandler;
@@ -15,6 +16,7 @@ import br.com.candalo.popularmovies.features.movies.data.datasource.MovieReviews
 import br.com.candalo.popularmovies.features.movies.data.datasource.MovieTrailersCloudDataSource;
 import br.com.candalo.popularmovies.features.movies.data.datasource.MoviesByPopularityQuerySpec;
 import br.com.candalo.popularmovies.features.movies.data.datasource.MoviesByRatingQuerySpec;
+import br.com.candalo.popularmovies.features.movies.data.datasource.local.MovieLocalDataSource;
 import br.com.candalo.popularmovies.features.movies.data.repository.MovieRepositoryImpl;
 import br.com.candalo.popularmovies.features.movies.data.repository.MovieReviewRepositoryImpl;
 import br.com.candalo.popularmovies.features.movies.data.repository.MovieTrailerRepositoryImpl;
@@ -27,8 +29,10 @@ import br.com.candalo.popularmovies.features.movies.domain.repository.MovieRevie
 import br.com.candalo.popularmovies.features.movies.domain.repository.MovieTrailerRepository;
 import br.com.candalo.popularmovies.features.movies.domain.usecases.GetMovieListByPopularity;
 import br.com.candalo.popularmovies.features.movies.domain.usecases.GetMovieListByRating;
+import br.com.candalo.popularmovies.features.movies.domain.usecases.GetMovieLocally;
 import br.com.candalo.popularmovies.features.movies.domain.usecases.GetMovieReviews;
 import br.com.candalo.popularmovies.features.movies.domain.usecases.GetMovieTrailers;
+import br.com.candalo.popularmovies.features.movies.domain.usecases.SaveMovieLocally;
 import br.com.candalo.popularmovies.features.movies.presentation.error.MovieDetailsErrorHandler;
 import br.com.candalo.popularmovies.features.movies.presentation.error.MovieErrorHandler;
 import br.com.candalo.popularmovies.features.movies.presentation.presenter.MovieDetailsPresenter;
@@ -76,8 +80,14 @@ public class MovieModule {
 
     @Provides
     @ActivityScope
-    MovieRepository provideMovieRepository() {
-        return new MovieRepositoryImpl();
+    LocalDataSource<Movie> provideMovieLocalDataSource(Context context) {
+        return new MovieLocalDataSource(context);
+    }
+
+    @Provides
+    @ActivityScope
+    MovieRepository provideMovieRepository(LocalDataSource<Movie> localDataSource) {
+        return new MovieRepositoryImpl(localDataSource);
     }
 
     @Provides
@@ -123,6 +133,18 @@ public class MovieModule {
     }
 
     @Provides
+    @ActivityScope
+    UseCase<Void, Movie> provideSaveMovieUseCase(MovieRepository movieRepository) {
+        return new SaveMovieLocally(movieRepository);
+    }
+
+    @Provides
+    @ActivityScope
+    UseCase<Movie, Integer> provideGetMovieUseCase(MovieRepository movieRepository) {
+        return new GetMovieLocally(movieRepository);
+    }
+
+    @Provides
     @Named("movie")
     @ActivityScope
     ErrorHandler provideMovieErrorHandler(Context context) {
@@ -148,7 +170,15 @@ public class MovieModule {
     @ActivityScope
     MovieDetailsPresenter provideMovieDetailsPresenter(UseCase<List<Video>, Integer> getMovieTrailerUseCase,
                                                        UseCase<List<MovieReview>, Integer> getMovieReviewsUseCase,
+                                                       UseCase<Void, Movie> saveMovieUseCase,
+                                                       UseCase<Movie, Integer> getMovieUseCase,
                                                        @Named("movie_details") ErrorHandler errorHandler) {
-        return new MovieDetailsPresenter(getMovieTrailerUseCase, getMovieReviewsUseCase, errorHandler);
+        return new MovieDetailsPresenter(
+                getMovieTrailerUseCase,
+                getMovieReviewsUseCase,
+                saveMovieUseCase,
+                getMovieUseCase,
+                errorHandler
+        );
     }
 }

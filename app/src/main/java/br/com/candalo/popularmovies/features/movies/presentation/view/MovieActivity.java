@@ -25,6 +25,7 @@ import br.com.candalo.popularmovies.R;
 import br.com.candalo.popularmovies.features.movies.data.di.DaggerMovieComponent;
 import br.com.candalo.popularmovies.features.movies.domain.models.Movie;
 import br.com.candalo.popularmovies.features.movies.presentation.presenter.MoviePresenter;
+import br.com.candalo.popularmovies.features.movies.presentation.view.adapter.MovieAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hugo.weaving.DebugLog;

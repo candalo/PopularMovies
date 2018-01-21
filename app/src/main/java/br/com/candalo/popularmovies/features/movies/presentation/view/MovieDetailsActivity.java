@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ import br.com.candalo.popularmovies.features.movies.presentation.view.adapter.Mo
 import br.com.candalo.popularmovies.features.movies.util.MovieUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MovieDetailsActivity extends AppCompatActivity implements MovieDetailsView {
 
@@ -44,6 +46,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     TextView releaseDateTextView;
     @BindView(R.id.tv_user_average)
     TextView userAverageTextView;
+    @BindView(R.id.cb_favorite)
+    CheckBox favoriteCheckBox;
     @BindView(R.id.tv_synopsis)
     TextView synopsisTextView;
     @BindView(R.id.rv_movie_trailers)
@@ -51,6 +55,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     @BindView(R.id.rv_movie_reviews)
     RecyclerView movieReviewsRecyclerView;
     private Movie movie;
+    private boolean isStarred;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,8 +66,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         setupRecyclerViews();
         movie = getMovieData();
         setupScreenData();
-        presenter.attachTo(this);
-        presenter.loadMovieDetails(movie.getId());
+        setupPresenter();
     }
 
     private void injectDependencies() {
@@ -100,6 +104,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         releaseDateTextView.setText(movie.getReleaseDate().split("-")[0]); //TODO: Change to a most elegant solution
         userAverageTextView.setText(getString(R.string.user_average, movie.getUserAverage()));
         synopsisTextView.setText(movie.getSynopsis());
+    }
+
+    private void setupPresenter() {
+        presenter.attachTo(this);
+        presenter.loadMovieDetails(movie.getId());
     }
 
     @Override
@@ -169,5 +178,26 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void showStarred() {
+        favoriteCheckBox.setChecked(true);
+        isStarred = true;
+    }
+
+    @Override
+    public void showUnstarred() {
+        favoriteCheckBox.setChecked(false);
+        isStarred = false;
+    }
+
+    @OnClick(R.id.cb_favorite)
+    void onClickFavoriteCheckBox() {
+        if (isStarred) {
+            favoriteCheckBox.setChecked(true);
+            return;
+        }
+        presenter.onMovieStarred(movie);
     }
 }

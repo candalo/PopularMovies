@@ -9,6 +9,12 @@ import io.reactivex.Observable;
 
 public interface MovieRepository {
 
+    Observable<Void> save(Movie movie);
+
+    Observable<Movie> find(int movieId);
+
+    Observable<List<Movie>> list();
+
     Observable<List<Movie>> listByQuery(MovieQuerySpec querySpec);
 
 }
