@@ -32,6 +32,7 @@ import br.com.candalo.popularmovies.features.movies.domain.usecases.GetMovieList
 import br.com.candalo.popularmovies.features.movies.domain.usecases.GetMovieLocally;
 import br.com.candalo.popularmovies.features.movies.domain.usecases.GetMovieReviews;
 import br.com.candalo.popularmovies.features.movies.domain.usecases.GetMovieTrailers;
+import br.com.candalo.popularmovies.features.movies.domain.usecases.GetMoviesLocally;
 import br.com.candalo.popularmovies.features.movies.domain.usecases.SaveMovieLocally;
 import br.com.candalo.popularmovies.features.movies.presentation.error.MovieDetailsErrorHandler;
 import br.com.candalo.popularmovies.features.movies.presentation.error.MovieErrorHandler;
@@ -121,6 +122,13 @@ public class MovieModule {
     }
 
     @Provides
+    @Named("get_starred_movies")
+    @ActivityScope
+    UseCase<List<Movie>, Void> provideGetStarredMoviesUseCase(MovieRepository movieRepository) {
+        return new GetMoviesLocally(movieRepository);
+    }
+
+    @Provides
     @ActivityScope
     UseCase<List<Video>, Integer> provideGetMovieTrailerUseCase(MovieTrailerRepository movieTrailerRepository) {
         return new GetMovieTrailers(movieTrailerRepository);
@@ -162,8 +170,9 @@ public class MovieModule {
     @ActivityScope
     MoviePresenter provideMoviePresenter(@Named("get_movie_list_by_popularity") UseCase<List<Movie>, Void> getMovieListByPopularityUseCase,
                                          @Named("get_movie_list_by_rating") UseCase<List<Movie>, Void> getMovieListByRatingUseCase,
+                                         @Named("get_starred_movies") UseCase<List<Movie>, Void> getStarredMoviesUseCase,
                                          @Named("movie") ErrorHandler errorHandler) {
-        return new MoviePresenter(getMovieListByPopularityUseCase, getMovieListByRatingUseCase, errorHandler);
+        return new MoviePresenter(getMovieListByPopularityUseCase, getMovieListByRatingUseCase, getStarredMoviesUseCase, errorHandler);
     }
 
     @Provides

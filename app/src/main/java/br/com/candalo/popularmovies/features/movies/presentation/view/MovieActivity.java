@@ -97,6 +97,8 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
             case R.id.rating_ordination:
                 presenter.onGetMoviesByRatingOptionSelected();
                 break;
+            case R.id.starred_ordination:
+                presenter.onGetStarredMoviesOptionSelected();
             default:
                 return super.onOptionsItemSelected(item);
         }
