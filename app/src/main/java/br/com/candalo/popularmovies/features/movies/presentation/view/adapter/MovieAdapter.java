@@ -1,4 +1,4 @@
-package br.com.candalo.popularmovies.features.movies.presentation.view;
+package br.com.candalo.popularmovies.features.movies.presentation.view.adapter;
 
 
 import android.content.Context;
@@ -12,6 +12,7 @@ import java.util.List;
 
 import br.com.candalo.popularmovies.R;
 import br.com.candalo.popularmovies.features.movies.domain.models.Movie;
+import br.com.candalo.popularmovies.features.movies.presentation.view.MovieView;
 import br.com.candalo.popularmovies.features.movies.util.MovieUtils;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHolder> {

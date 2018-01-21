@@ -9,4 +9,8 @@
         android:id="@+id/rating_ordination"
         android:title="@string/movie_list_menu_rating_item"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/starred_ordination"
+        android:title="@string/movie_list_menu_starred_item"
+        app:showAsAction="never" />
 </menu>

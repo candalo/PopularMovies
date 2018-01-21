@@ -4,6 +4,7 @@
     <!-- Movie list -->
     <string name="movie_list_menu_popularity_item">Ordenar por popularidade</string>
     <string name="movie_list_menu_rating_item">Ordenar por avaliação</string>
+    <string name="movie_list_menu_starred_item">Ordenar por favoritos</string>
     <string name="movie_list_toolbar_title">Movies</string>
     <string name="movie_poster_content_description">Movie Poster</string>
 
@@ -11,8 +12,13 @@
     <string name="movie_details_toolbar_title">Movie Details</string>
     <string name="movie_backdrop_content_description">Movie Backdrop</string>
     <string name="synopsis_default">Sinopse indisponível</string>
-    <string name="release_date_default">Data de lançamento indisponível</string>
+    <string name="release_date_default">-</string>
     <string name="user_average">%1$.1f/10</string>
+    <string name="youtube_trailer_url">https://www.youtube.com/watch?v=%1$s</string>
+    <string name="play_icon_content_description">Play icon</string>
+    <string name="comment_icon_content_description">Comment icon</string>
+    <string name="trailers">Trailers:</string>
+    <string name="reviews">Comentários:</string>
 
     <!-- Global -->
     <string name="default_error">Ops! Ocorreu algum problema</string>

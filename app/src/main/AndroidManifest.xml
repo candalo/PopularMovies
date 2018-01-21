@@ -20,6 +20,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".features.movies.presentation.view.MovieDetailsActivity" />
+
+        <provider
+            android:authorities="br.com.candalo.popularmovies"
+            android:name=".features.movies.data.datasource.local.MovieContentProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>

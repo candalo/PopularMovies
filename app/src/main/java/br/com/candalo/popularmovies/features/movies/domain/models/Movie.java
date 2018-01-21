@@ -9,6 +9,7 @@ import org.parceler.ParcelConstructor;
 @Parcel(Parcel.Serialization.BEAN)
 public class Movie {
 
+    private int id;
     private String title;
     @SerializedName("poster_path")
     private String posterThumbnail;
@@ -22,18 +23,24 @@ public class Movie {
     private String releaseDate;
 
     @ParcelConstructor
-    public Movie(String title,
+    public Movie(int id,
+                 String title,
                  String posterThumbnail,
                  String backdropThumbnail,
                  String synopsis,
                  double userAverage,
                  String releaseDate) {
+        this.id = id;
         this.title = title;
         this.posterThumbnail = posterThumbnail;
         this.backdropThumbnail = backdropThumbnail;
         this.synopsis = synopsis;
         this.userAverage = userAverage;
         this.releaseDate = releaseDate;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {

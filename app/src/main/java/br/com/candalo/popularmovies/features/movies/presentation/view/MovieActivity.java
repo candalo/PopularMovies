@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,6 +26,7 @@ import br.com.candalo.popularmovies.R;
 import br.com.candalo.popularmovies.features.movies.data.di.DaggerMovieComponent;
 import br.com.candalo.popularmovies.features.movies.domain.models.Movie;
 import br.com.candalo.popularmovies.features.movies.presentation.presenter.MoviePresenter;
+import br.com.candalo.popularmovies.features.movies.presentation.view.adapter.MovieAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hugo.weaving.DebugLog;
@@ -39,6 +41,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     RecyclerView moviesRecyclerView;
     @BindView(R.id.tv_internet_error)
     TextView internetErrorTextView;
+    private List<Movie> movies = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         injectDependencies();
         setupToolbar();
         setupRecyclerView();
-        presenter.attachTo(this);
+        setupPresenter(savedInstanceState);
     }
 
     private void injectDependencies() {
@@ -70,6 +73,13 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     private void setupRecyclerView() {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         moviesRecyclerView.setLayoutManager(layoutManager);
+    }
+
+    private void setupPresenter(Bundle savedInstanceState) {
+        presenter.attachTo(this);
+        if (savedInstanceState == null) {
+            presenter.onGetMoviesByPopularityOptionSelected();
+        }
     }
 
     @Override
@@ -96,6 +106,8 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
             case R.id.rating_ordination:
                 presenter.onGetMoviesByRatingOptionSelected();
                 break;
+            case R.id.starred_ordination:
+                presenter.onGetStarredMoviesOptionSelected();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -103,8 +115,22 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(Movie.class.getName(), Parcels.wrap(movies));
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        movies = Parcels.unwrap(savedInstanceState.getParcelable(Movie.class.getName()));
+        presenter.showLoadedMovies(movies);
+    }
+
+    @Override
     @DebugLog
     public void onMoviesLoaded(List<Movie> movies) {
+        this.movies = movies;
         MovieAdapter movieAdapter = new MovieAdapter(movies, this);
         moviesRecyclerView.setAdapter(movieAdapter);
     }
