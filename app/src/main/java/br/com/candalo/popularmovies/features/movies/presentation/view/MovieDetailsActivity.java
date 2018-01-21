@@ -58,7 +58,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         movie = getMovieData();
         setupScreenData();
         presenter.attachTo(this);
-        presenter.getMovieTrailers(movie.getId());
+        presenter.loadMovieDetails(movie.getId());
     }
 
     private void injectDependencies() {

@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import br.com.candalo.popularmovies.base.domain.UseCase;
 import br.com.candalo.popularmovies.base.presentation.ErrorHandler;
 import br.com.candalo.popularmovies.base.presentation.Presenter;
+import br.com.candalo.popularmovies.features.movies.domain.models.MovieReview;
 import br.com.candalo.popularmovies.features.movies.domain.models.Video;
 import br.com.candalo.popularmovies.features.movies.presentation.view.MovieDetailsView;
 import br.com.candalo.popularmovies.network.NetworkException;
@@ -18,12 +19,15 @@ public class MovieDetailsPresenter implements Presenter<MovieDetailsView> {
 
     private MovieDetailsView view;
     private UseCase<List<Video>, Integer> getMovieTrailersUseCase;
+    private UseCase<List<MovieReview>, Integer> getMovieReviewsUseCase;
     private ErrorHandler errorHandler;
 
     @Inject
     public MovieDetailsPresenter(UseCase<List<Video>, Integer> getMovieTrailersUseCase,
+                                 UseCase<List<MovieReview>, Integer> getMovieReviewsUseCase,
                                  ErrorHandler errorHandler) {
         this.getMovieTrailersUseCase = getMovieTrailersUseCase;
+        this.getMovieReviewsUseCase = getMovieReviewsUseCase;
         this.errorHandler = errorHandler;
     }
 
@@ -35,11 +39,13 @@ public class MovieDetailsPresenter implements Presenter<MovieDetailsView> {
     @Override
     public void destroy() {
         getMovieTrailersUseCase.dispose();
+        getMovieReviewsUseCase.dispose();
         view = null;
     }
 
-    public void getMovieTrailers(int movieId) {
+    public void loadMovieDetails(int movieId) {
         getMovieTrailersUseCase.execute(new GetMovieTrailersObserver(), movieId);
+        getMovieReviewsUseCase.execute(new GetMovieReviewsObserver(), movieId);
     }
 
     class GetMovieTrailersObserver extends DisposableObserver<List<Video>> {
@@ -75,6 +81,27 @@ public class MovieDetailsPresenter implements Presenter<MovieDetailsView> {
             }
 
             return filteredVideos;
+        }
+    }
+
+    class GetMovieReviewsObserver extends DisposableObserver<List<MovieReview>> {
+        @Override
+        public void onNext(List<MovieReview> movieReviews) {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            view.hideLoading();
+            view.showErrorMessage(errorHandler.handleError(e));
+            if (e instanceof NetworkException) {
+                view.showNetworkErrorMessage();
+            }
+        }
+
+        @Override
+        public void onComplete() {
+            view.hideLoading();
         }
     }
 }
