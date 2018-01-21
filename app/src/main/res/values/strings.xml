@@ -15,7 +15,9 @@
     <string name="user_average">%1$.1f/10</string>
     <string name="youtube_trailer_url">https://www.youtube.com/watch?v=%1$s</string>
     <string name="play_icon_content_description">Play icon</string>
+    <string name="comment_icon_content_description">Comment icon</string>
     <string name="trailers">Trailers:</string>
+    <string name="reviews">Comentários:</string>
 
     <!-- Global -->
     <string name="default_error">Ops! Ocorreu algum problema</string>

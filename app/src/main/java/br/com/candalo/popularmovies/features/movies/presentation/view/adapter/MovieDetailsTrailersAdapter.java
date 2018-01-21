@@ -15,12 +15,12 @@ import br.com.candalo.popularmovies.features.movies.domain.models.Video;
 import br.com.candalo.popularmovies.features.movies.presentation.view.MovieDetailsView;
 
 
-public class MovieDetailsAdapter extends RecyclerView.Adapter<MovieDetailsAdapter.MovieDetailsViewHolder> {
+public class MovieDetailsTrailersAdapter extends RecyclerView.Adapter<MovieDetailsTrailersAdapter.MovieDetailsViewHolder> {
 
     private List<Video> trailers;
     private MovieDetailsView movieDetailsView;
 
-    public MovieDetailsAdapter(List<Video> trailers, MovieDetailsView movieDetailsView) {
+    public MovieDetailsTrailersAdapter(List<Video> trailers, MovieDetailsView movieDetailsView) {
         this.trailers = trailers;
         this.movieDetailsView = movieDetailsView;
     }
@@ -40,6 +40,13 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<MovieDetailsAdapte
         Video trailer = trailers.get(position);
         holder.movieTrailerTitle.setText(trailer.getName());
         holder.bind(trailer);
+        removeDividerFromLastItem(holder.itemDivider, position);
+    }
+
+    private void removeDividerFromLastItem(View divider, int position) {
+        if (trailers.size() == position + 1) {
+            divider.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -51,11 +58,13 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<MovieDetailsAdapte
 
         private Video trailer;
         TextView movieTrailerTitle;
+        View itemDivider;
 
         MovieDetailsViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             movieTrailerTitle = itemView.findViewById(R.id.tv_trailer_title);
+            itemDivider = itemView.findViewById(R.id.view_divider);
         }
 
         void bind(Video trailer) {

@@ -87,7 +87,7 @@ public class MovieDetailsPresenter implements Presenter<MovieDetailsView> {
     class GetMovieReviewsObserver extends DisposableObserver<List<MovieReview>> {
         @Override
         public void onNext(List<MovieReview> movieReviews) {
-
+            view.onReviewsLoaded(movieReviews);
         }
 
         @Override

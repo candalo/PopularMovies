@@ -7,27 +7,32 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/iv_play"
+        android:id="@+id/iv_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:contentDescription="@string/play_icon_content_description"
+        android:contentDescription="@string/comment_icon_content_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_play" />
+        app:srcCompat="@drawable/ic_comment" />
 
     <TextView
-        android:id="@+id/tv_trailer_title"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_comment"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_play"
-        app:layout_constraintStart_toEndOf="@+id/iv_play"
-        app:layout_constraintTop_toTopOf="@+id/iv_play"
-        tools:text="Trailer 1" />
+        android:ellipsize="end"
+        android:maxLines="3"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/iv_comment"
+        app:layout_constraintTop_toTopOf="@+id/iv_comment"
+        app:layout_constraintWidth_default="wrap"
+        tools:text="The 90's Game is back and got even more adventurous !!" />
 
     <View
         android:id="@+id/view_divider"
@@ -38,6 +43,6 @@
         android:background="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_play" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_comment" />
 
 </android.support.constraint.ConstraintLayout>

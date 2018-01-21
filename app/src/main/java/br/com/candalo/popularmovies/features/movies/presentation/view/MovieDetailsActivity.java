@@ -23,9 +23,11 @@ import br.com.candalo.popularmovies.App;
 import br.com.candalo.popularmovies.R;
 import br.com.candalo.popularmovies.features.movies.data.di.DaggerMovieComponent;
 import br.com.candalo.popularmovies.features.movies.domain.models.Movie;
+import br.com.candalo.popularmovies.features.movies.domain.models.MovieReview;
 import br.com.candalo.popularmovies.features.movies.domain.models.Video;
 import br.com.candalo.popularmovies.features.movies.presentation.presenter.MovieDetailsPresenter;
-import br.com.candalo.popularmovies.features.movies.presentation.view.adapter.MovieDetailsAdapter;
+import br.com.candalo.popularmovies.features.movies.presentation.view.adapter.MovieDetailsReviewsAdapter;
+import br.com.candalo.popularmovies.features.movies.presentation.view.adapter.MovieDetailsTrailersAdapter;
 import br.com.candalo.popularmovies.features.movies.util.MovieUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +48,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
     TextView synopsisTextView;
     @BindView(R.id.rv_movie_trailers)
     RecyclerView movieTrailersRecyclerView;
+    @BindView(R.id.rv_movie_reviews)
+    RecyclerView movieReviewsRecyclerView;
     private Movie movie;
 
     @Override
@@ -54,7 +58,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         setContentView(R.layout.activity_movie_details);
         injectDependencies();
         setupToolbar();
-        setupRecyclerView();
+        setupRecyclerViews();
         movie = getMovieData();
         setupScreenData();
         presenter.attachTo(this);
@@ -79,10 +83,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
         }
     }
 
-    private void setupRecyclerView() {
+    private void setupRecyclerViews() {
+        movieTrailersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         movieTrailersRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        movieTrailersRecyclerView.setLayoutManager(layoutManager);
+        movieReviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        movieReviewsRecyclerView.setHasFixedSize(true);
     }
 
     private Movie getMovieData() {
@@ -138,13 +143,28 @@ public class MovieDetailsActivity extends AppCompatActivity implements MovieDeta
 
     @Override
     public void onTrailersLoaded(List<Video> trailers) {
-        MovieDetailsAdapter adapter = new MovieDetailsAdapter(trailers, this);
+        MovieDetailsTrailersAdapter adapter = new MovieDetailsTrailersAdapter(trailers, this);
         movieTrailersRecyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onTrailerItemClicked(Video trailer) {
-        Uri uri = Uri.parse(getString(R.string.youtube_trailer_url, trailer.getKey()));
+        startActionViewIntent(getString(R.string.youtube_trailer_url, trailer.getKey()));
+    }
+
+    @Override
+    public void onReviewsLoaded(List<MovieReview> reviews) {
+        MovieDetailsReviewsAdapter adapter = new MovieDetailsReviewsAdapter(reviews, this);
+        movieReviewsRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onReviewItemClicked(MovieReview review) {
+        startActionViewIntent(review.getUrl());
+    }
+
+    private void startActionViewIntent(String url) {
+        Uri uri = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
